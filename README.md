@@ -26,23 +26,6 @@ Este projeto é um sistema web desenvolvido com **Spring Boot** e **Thymeleaf** 
 - **Singleton**: aplicado ao repositório para garantir uma única instância de acesso aos dados.
 - **Facade**: usado para centralizar a lógica de negócio e facilitar o uso no controller.
 
-## 📁 Estrutura do Projeto
-
-src/
-├── main/
-│ ├── java/
-│ │ └── com.exemplo.viagem/
-│ │ ├── controller/
-│ │ ├── model/
-│ │ ├── repository/
-│ │ ├── service/
-│ │ ├── factory/
-│ │ └── ViagemApplication.java
-│ └── resources/
-│ ├── templates/
-│ ├── static/
-│ └── application.properties
-
 bash
 Copiar
 Editar
