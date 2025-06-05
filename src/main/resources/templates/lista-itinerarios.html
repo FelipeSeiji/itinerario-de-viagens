@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Meus Itinerários</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Seus Itinerários</h1>
+    <span class="text-gray-600">Olá, <strong th:text="${usuarioLogado.nome}">Usuário</strong>!</span>
+</div>
+
+<div class="max-w-4xl mx-auto bg-white shadow-md rounded p-6">
+    <h1 class="text-2xl font-bold mb-4">Meus Itinerários</h1>
+
+    <a href="/itinerarios/novo" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4 inline-block">
+        + Novo Itinerário
+    </a>
+
+    <table class="w-full mt-4 table-auto border border-gray-300">
+        <thead class="bg-gray-200">
+        <tr>
+            <th class="p-2 text-left">Destino</th>
+            <th class="p-2">Data</th>
+            <th class="p-2">Hotel</th>
+            <th class="p-2">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="itinerario : ${itinerarios}" class="border-t">
+            <td class="p-2" th:text="${itinerario.destino}"></td>
+            <td class="p-2" th:text="${itinerario.data}"></td>
+            <td class="p-2" th:text="${itinerario.hotel}"></td>
+            <td class="p-2 flex gap-2">
+                <a th:href="@{'/itinerarios/editar/' + ${itinerario.id}}" class="text-blue-600 hover:underline">Editar</a>
+                <a th:href="@{'/itinerarios/excluir/' + ${itinerario.id}}" class="text-red-600 hover:underline"
+                   onclick="return confirm('Tem certeza que deseja excluir este itinerário?');">Excluir</a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

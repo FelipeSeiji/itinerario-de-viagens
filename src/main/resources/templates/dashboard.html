@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard de Itinerário</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white p-6">
+<div class="max-w-6xl mx-auto bg-gray-800 p-6 rounded shadow-lg">
+
+    <h1 class="text-3xl font-bold mb-2">PLANIFICADOR DE ITINERÁRIO</h1>
+    <p class="mb-6 text-lg">Duração da viagem: <strong th:text="${itinerarios.size()} + ' dias'"></strong></p>
+
+    <div th:each="it, iterStat : ${itinerarios}" class="mb-4 bg-white text-black rounded shadow flex items-start">
+        <div th:switch="${iterStat.index}" class="w-24 text-center font-bold text-xl p-3 rounded-l"
+             th:classappend="iterStat.index == 0 ? 'bg-red-400' :
+                             iterStat.index == 1 ? 'bg-yellow-300' :
+                             iterStat.index == 2 ? 'bg-green-300' :
+                             iterStat.index == 3 ? 'bg-blue-400' :
+                             iterStat.index == 4 ? 'bg-pink-300' : 'bg-gray-300'">
+            <div>DIA</div>
+            <div th:text="${iterStat.index + 1}">01</div>
+        </div>
+
+        <div class="flex-1 px-6 py-4 space-y-2">
+            <p><strong>Destino:</strong> <span th:text="${it.destino}"></span></p>
+            <p><strong>Data:</strong> <span th:text="${#dates.format(it.data, 'dd/MM/yyyy')}"></span></p>
+            <p><strong>Hotel:</strong> <span th:text="${it.hotel}"></span></p>
+            <p><strong>Transporte:</strong> <span th:text="${it.transporte}"></span></p>
+            <p><strong>Ponto de Interesse:</strong> <span th:text="${it.pontoInteresse}"></span></p>
+            <p><strong>Valor Estimado:</strong> R$ <span th:text="${it.valorEstimado}"></span></p>
+            <p><strong>Notas:</strong> <span th:text="${it.notas}"></span></p>
+        </div>
+    </div>
+
+    <footer class="mt-6 text-sm text-gray-300 border-t border-gray-600 pt-4">
+        <p><strong>Período da viagem:</strong> 10 de julho – 30 de julho</p>
+        <p><strong>Endereço:</strong> Rua Exemplo, 123 – São Paulo – SP</p>
+        <p><strong>Contato:</strong> (11) 99999-9999</p>
+    </footer>
+
+</div>
+</body>
+</html>
