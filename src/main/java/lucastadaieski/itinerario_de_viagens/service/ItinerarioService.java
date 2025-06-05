@@ -1,8 +1,11 @@
 package lucastadaieski.itinerario_de_viagens.service;
 
+import lucastadaieski.itinerario_de_viagens.factory.ItinerarioFactory;
+import lucastadaieski.itinerario_de_viagens.factory.ItinerarioTuristicoFactory;
 import lucastadaieski.itinerario_de_viagens.model.Itinerario;
 import lucastadaieski.itinerario_de_viagens.model.Usuario;
 import lucastadaieski.itinerario_de_viagens.repository.ItinerarioRepository;
+import lucastadaieski.itinerario_de_viagens.util.LoggerSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -20,20 +23,11 @@ public class ItinerarioService {
         this.itinerarioRepository = itinerarioRepository;
     }
 
-    public Itinerario salvar(Itinerario dados, Usuario usuarioLogado) {
-        Itinerario novo = new Itinerario.Builder(usuarioLogado)
-                .destino(dados.getDestino())
-                .data(dados.getData())
-                .hotel(dados.getHotel())
-                .transporte(dados.getTransporte())
-                .pontoInteresse(dados.getPontoInteresse())
-                .valorEstimado(dados.getValorEstimado())
-                .notas(dados.getNotas())
-                .build();
-
-        return itinerarioRepository.save(novo);
+    // Salvar novo ou existente (o controller injeta o usuário antes de salvar)
+    public void salvar(Itinerario itinerario) {
+        itinerarioRepository.save(itinerario);
+        LoggerSingleton.getInstancia().registrar("Itinerário salvo: " + itinerario.getDestino());
     }
-
 
     public List<Itinerario> listarTodosPorUsuario(Usuario usuario) {
         return itinerarioRepository.findByUsuario(usuario);
@@ -47,28 +41,15 @@ public class ItinerarioService {
         itinerarioRepository.deleteById(id);
     }
 
-    public void atualizar(Itinerario dados, Usuario usuarioLogado) {
-        Itinerario existente = buscarPorId(dados.getId())
+    public void atualizar(Itinerario atualizacao, Usuario usuarioLogado) {
+        Itinerario existente = buscarPorId(atualizacao.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Itinerário não encontrado"));
 
         validarPermissaoDeEdicao(existente, usuarioLogado);
 
-        Itinerario atualizadoComBuilder = new Itinerario.Builder(usuarioLogado)
-                .destino(dados.getDestino())
-                .data(dados.getData())
-                .hotel(dados.getHotel())
-                .transporte(dados.getTransporte())
-                .pontoInteresse(dados.getPontoInteresse())
-                .valorEstimado(dados.getValorEstimado())
-                .notas(dados.getNotas())
-                .build();
-
-        existente.atualizarCom(atualizadoComBuilder);
+        existente.atualizarCom(atualizacao); // método do próprio modelo
         itinerarioRepository.save(existente);
     }
-
-
-
 
     private void validarPermissaoDeEdicao(Itinerario itinerario, Usuario usuarioLogado) {
         if (!itinerario.getUsuario().getId().equals(usuarioLogado.getId())) {
@@ -76,7 +57,9 @@ public class ItinerarioService {
         }
     }
 
-
-
+    public Itinerario criarItinerarioTuristico(Usuario usuario) {
+        ItinerarioFactory factory = new ItinerarioTuristicoFactory();
+        return factory.criarItinerario(usuario);
+    }
 
 }
